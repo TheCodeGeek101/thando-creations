@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Footer.jsx", "components/Home.jsx", "pages/product/[id].jsx", "components/Sidebar.jsx", "components/Product/product.jsx", "components/Hero.jsx", "components/Header.jsx", "components/CartItem.js", "next.config.js", "contexts/SidebarContext.jsx", "contexts/ProductContext.jsx", "contexts/CartContext.jsx", "src/app/page.jsx", "src/app/layout.jsx", "tailwind.config.js"],
+  "exclude": ["node_modules"]
+}
