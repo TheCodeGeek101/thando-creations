@@ -1,20 +1,25 @@
 import React, { createContext, useEffect, useState } from 'react';
+import { client } from '../sanity/lib/client';
 
 export const ProductContext = createContext();
 
 const ProductProvider = ({ children }) => {
-  const [products, setProducts] = useState([]);
+  const [productState, setProductState] = useState({
+    products: [],
+    error: '',
+    loading: true
+  });
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('https://fakestoreapi.com/products');
+        const products = await client.fetch(`*[_type == "product"]`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        const data = await response.json();
-        setProducts(data);
+        setProductState({ products, loading: false });
       } catch (error) {
+        setProductState({ loading: false, error: error.message });
         console.error("Error fetching data: " + error);
       }
     };
@@ -23,7 +28,7 @@ const ProductProvider = ({ children }) => {
   }, []);
 
   return (
-    <ProductContext.Provider value={{ products }}>
+    <ProductContext.Provider value={{ productState }}>
       {children}
     </ProductContext.Provider>
   );
