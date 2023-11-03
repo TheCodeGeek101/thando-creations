@@ -7,8 +7,11 @@ const nextConfig = {
 }
 
 module.exports = {
-...nextConfig,
-api:{
-  externalResolver:true
-}
+  ...nextConfig,
+  api:{
+    externalResolver:true
+  },
+  images: {
+      domains: ['cdn.sanity.io']
+    }
 }

@@ -19,10 +19,10 @@ const Sidebar = () => {
           <IoMdArrowForward className='text-2xl' />
         </div>
       </div>
-      <div className='flex flex-col gap-y-2 h-[290px] lg:h-[320px] overflow-y-auto overflow-x-hidden border-b'>
+      <div className='flex flex-col gap-y-2 h-[220px] lg:h-[340px] overflow-y-auto overflow-x-hidden border-b'>
         {cart.map((item) => {
           return (
-            <CartItem item={item} key={item.id} />
+            <CartItem item={item} key={item._id} />
           );
         })}
       </div>

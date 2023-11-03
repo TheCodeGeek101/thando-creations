@@ -2,20 +2,31 @@ import CartProvider from "../contexts/CartContext";
 import ProductProvider from "../contexts/ProductContext";
 import SidebarProvider from "../contexts/SidebarContext";
 import React from "react";
-import { useRouter } from "next/router";
 import '../styles/globals.css';
-import Sidebar from "../components/Sidebar";
+import { StoreProvider } from "../contexts/StoreContext";
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { SnackbarProvider } from 'notistack';
+import createCache from '@emotion/cache';
 
-export default function App({ Component, pageProps }) {
-  const router = useRouter();
+const clientSideEmotionCache = createCache({ key: 'css' });
+
+export default function App({ Component, pageProps, emotionCache = clientSideEmotionCache, }) {
+
 	return (
 		 <SidebarProvider>
           <CartProvider>
             <ProductProvider>
-				<Component {...pageProps} />
-         {router.route !== '/product/[id]' && <Sidebar />}
+              <SnackbarProvider
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+              >
+              <StoreProvider>
+                <PayPalScriptProvider deferLoading={true}>
+		        		  <Component {...pageProps} />
+                </PayPalScriptProvider>
+              </StoreProvider>
+             </SnackbarProvider>
             </ProductProvider>
           </CartProvider>
-        </SidebarProvider>
+      </SidebarProvider>
 	); 
 }

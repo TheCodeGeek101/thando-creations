@@ -1,25 +1,43 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { client } from '../sanity/lib/client';
-
+// import { client } from '../sanity/lib/client';
+import { createClient } from 'next-sanity';
 export const ProductContext = createContext();
 
 const ProductProvider = ({ children }) => {
-  const [productState, setProductState] = useState({
-    products: [],
-    error: '',
-    loading: true
-  });
+  const [products, setProducts] = useState([]);
+
+
+const client = createClient({
+  projectId: "fauat7no",
+  dataset: "production",
+  apiVersion: "2023-10-30",
+  useCdn: true
+});
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProducts = () => {
       try {
-        const products = await client.fetch(`*[_type == "product"]`);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        setProductState({ products, loading: false });
+        client.fetch(`*[_type == "product"]{
+            rating,
+            name,
+            category,
+            brand,
+            description,
+            price,
+            _id,
+            "slug": slug.current,
+            "image": image.asset->url
+          }`)
+        .then((response)  => {
+          const data = JSON.stringify(response);
+           console.log("data from sanity:" + data);
+           setProducts(response);    
+        })
+        .catch((error) => {
+          console.error(error);
+        });
       } catch (error) {
-        setProductState({ loading: false, error: error.message });
+        // setProductState({ loading: false, error: error.message });
         console.error("Error fetching data: " + error);
       }
     };
@@ -28,7 +46,7 @@ const ProductProvider = ({ children }) => {
   }, []);
 
   return (
-    <ProductContext.Provider value={{ productState }}>
+    <ProductContext.Provider value={{ products }}>
       {children}
     </ProductContext.Provider>
   );

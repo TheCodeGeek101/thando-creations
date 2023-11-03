@@ -4,17 +4,19 @@ import { ProductContext } from '../../contexts/ProductContext';
 import { useRouter } from 'next/router'
 import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
+import Image from "next/image";
+import { urlFor } from '../../utils/image';
 
 const ProductDetails = () => {
 	// get the product id from the url
 	const router = useRouter();
-	const id  =  router.query.id; 
+	const _id  =  router.query._id; 
 	const { products } = useContext(ProductContext);
 	const { addToCart } = useContext(CartContext);
 
 	// get the single product 
 	const product = products.find(item => {
-		return item.id === parseInt(id);
+		return item._id === _id;
 	});
 
 	// if product is not found 
@@ -38,7 +40,14 @@ const ProductDetails = () => {
 				<div className='flex flex-col lg:flex-row items-center'>
 					{/* image */}
 					<div className='flex flex-1 justify-center items-center mb-8 lg:mb-0 '>
-						<img className='max-w-[200px] lg:max-w-sm' src={image} alt="" />
+						{/* <img className='max-w-[200px] lg:max-w-sm' src={image} alt="" /> */}
+						 <Image
+							src={urlFor(product.image)}
+							width={1000}
+							height={1000}
+							className='max-w-[200px] lg:max-w-sm'
+							alt={name}
+          				  />
 					</div>
 					{/* text */}
 					<div className='flex-1 text-center lg:text-left '>
@@ -49,7 +58,7 @@ const ProductDetails = () => {
 							$ {price}
 						</div>
 						<p className='mb-8 '>{description}</p>
-						<button onClick={() => addToCart(product, product.id)} className="bg-primary py-4 px-8 text-white">
+						<button onClick={() => addToCart(product, product._id)} className="bg-primary py-4 px-8 text-white">
 							Add to cart
 						</button>
 					</div>
