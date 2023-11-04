@@ -24,8 +24,10 @@ const Index  = () => {
     // redirect user to homepage if user information is found
     useEffect(() => {
         if (userInfo) {
-        enqueueSnackbar("User already logged in", { variant: 'info' });
-        router.push(redirect || '/');
+        // jsCookie.remove('userInfo');
+        // enqueueSnackbar("User already logged in", { variant: 'info' });
+        console.log("User Information: " + JSON.stringify(userInfo));
+        // router.push(redirect || '/');
         }
     }, [router, userInfo, redirect]);
         
@@ -85,42 +87,21 @@ const Index  = () => {
                 jsCookie.set('userInfo', JSON.stringify(data));
                 router.push(redirect || '/');
                 
-                const loggedInUser = {
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                isAdmin: user.isAdmin,
-                token,
-                };
+                // const loggedInUser = {
+                // _id: user._id,
+                // name: user.name,
+                // email: user.email,
+                // isAdmin: user.isAdmin,
+                // token,
+                // };
 
-                return loggedInUser;
+                // return loggedInUser;
                 
             } 
             else {
                 enqueueSnackbar("Invalid email or password", { variant: 'error' });
                 return; 
             }
-
-            // //  if response is successful
-            // if (response.ok) {
-
-              
-            //     // Authentication successful
-            //     const userData = await response.json();
-            //     // You can handle the user data and token here (e.g., store in localStorage or a state variable)
-            //     console.log('Authentication successful', userData);
-            //      enqueueSnackbar("Authentication successful", { variant: 'success' });
-            // }
-            // else {
-            //     // Authentication failed
-            //     const errorData = await response.json();
-            //     // Handle the error (e.g., display an error message)
-            //     console.error('Authentication failed', errorData);
-            //     enqueueSnackbar("Authentication failed" + response.status, { variant: 'error' });
-            // }
-            // dispatch({ type: 'USER_LOGIN', payload: data });
-            // jsCookie.set('userInfo', JSON.stringify(data));
-            // router.push(redirect || '/');
         }
         catch(err){
             console.error(err);

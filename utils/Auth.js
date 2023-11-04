@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 const signToken = (user) => {
   return jwt.sign(user, "somethingsecretindeed", {
-    expiresIn: '30d',
+    expiresIn: '5s',
   });
 };
 console.log("I." + "signToken:" + signToken);

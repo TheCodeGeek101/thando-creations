@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Footer.jsx", "components/Home.jsx", "pages/product/[_id].jsx", "components/Sidebar.jsx", "components/Product/product.jsx", "components/Hero.jsx", "components/Header.jsx", "components/CartItem.js", "next.config.js", "contexts/SidebarContext.jsx", "contexts/ProductContext.jsx", "contexts/CartContext.jsx", "src/app/page.jsx", "src/app/layout.jsx", "tailwind.config.js", "sanity/lib/client.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Footer.jsx", "components/Home.jsx", "pages/product/[_id].jsx", "components/Sidebar.jsx", "components/Product/product.jsx", "components/Hero.jsx", "components/Header.jsx", "components/CartItem.js", "next.config.js", "contexts/SidebarContext.jsx", "contexts/ProductContext.jsx", "contexts/CartContext.jsx", "src/app/page.jsx", "src/app/layout.jsx", "tailwind.config.js", "sanity/lib/client.js", "components/Auth/steps/ShippingAddress.jsx", "components/Auth/Stepper.jsx"],
   "exclude": ["node_modules"]
 }
