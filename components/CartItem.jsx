@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
 import  Link  from 'next/link';
 import {IoMdClose, IoMdRemove, IoMdAdd} from "react-icons/io";
-import { CartContext } from '../contexts/CartContext';
+import { Store } from '../contexts/StoreContext';
+
+
 const CartItem = ({item}) => {
   // destructure the item
-  const {_id, name, image, price, amount} = item;
-  const {removeFromCart, increaseAmount, decreaseAmount} = useContext(CartContext);
+  const {_id, name, image, price, amount } = item;
+  const {removeFromCart, increaseAmount, decreaseAmount} = useContext(Store);
 
   return(
     <div className='flex items-center justify-center gap-x-4 py-2 lg:px-6 border-b border-gray-200 w-full font-light text-gray-500'>

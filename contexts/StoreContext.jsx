@@ -1,101 +1,203 @@
+import React, { createContext, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { createContext, useReducer } from 'react';
 
 export const Store = createContext();
 
-const initialState = {
-  darkMode: Cookies.get('darkMode') === 'ON' ? true : false,
-  cart: {
-    cartItems: Cookies.get('cartItems')
-      ? JSON.parse(Cookies.get('cartItems'))
-      : [],
-    shippingAddress: Cookies.get('shippingAddress')
+export const StoreProvider = ({ children }) => {
+  // Initialize dark mode state
+  const [darkMode, setDarkMode] = useState(() => Cookies.get('darkMode') === 'ON');
+
+  // Initialize cart state
+  const [cart, setCart] = useState(() => {
+    const cartItems = Cookies.get('cartItems') ? JSON.parse(Cookies.get('cartItems')) : [];
+    const shippingAddress = Cookies.get('shippingAddress')
       ? JSON.parse(Cookies.get('shippingAddress'))
-      : {},
-    paymentMethod: Cookies.get('paymentMethod')
-      ? Cookies.get('paymentMethod')
-      : '',
-  },
- userInfo: (() => {
-  const userInfoCookie = Cookies.get('userInfo');
-  if (userInfoCookie) {
-    try {
-      return JSON.parse(userInfoCookie);
-    } catch (error) {
-      console.error("Error parsing 'userInfo' cookie:", error);
-      return null; // Handle the case where the cookie data is not valid JSON
+      : {
+
+      };
+    const paymentMethod = Cookies.get('paymentMethod') || '';
+
+    return {
+      cartItems,
+      shippingAddress,
+      paymentMethod,
+    };
+  });
+
+  // Initialize user info state
+  const [userInfo, setUserInfo] = useState(() => {
+    const userInfoCookie = Cookies.get('userInfo');
+    if (userInfoCookie) {
+      try {
+        return JSON.parse(userInfoCookie);
+      } catch (error) {
+        console.error("Error parsing 'userInfo' cookie:", error);
+        return null; // Handle the case where the cookie data is not valid JSON
+      }
     }
+    return null; // Handle the case where the cookie is not set
+  });
+
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setDarkMode((prevDarkMode) => !prevDarkMode);
+    Cookies.set('darkMode', darkMode ? 'OFF' : 'ON');
+  };
+
+  // Set cart items
+  const setCartItems = (cartItems) => {
+    const updatedCart = { ...cart, cartItems };
+    setCart(updatedCart);
+   Cookies.set('cartItems', JSON.stringify(cartItems)); 
+  };
+
+
+
+  // add items to cart
+  const addToCart = (product, _id) => {
+    // const {cartItems} = cart;
+    const newItem = { ...product, amount: 1 };
+
+    // check if the item is already in the cart
+    const cartItem = cart.cartItems.find(item => {
+      return item._id === _id
+    });
+    // if cart item is already in the cart 
+    if (cartItem) {
+      const newCart = [...cart.cartItems].map(item => {
+        if (item._id === _id) {
+          return { ...item, amount: cartItem.amount + 1 };
+        }
+        else {
+          return item;
+        }
+      });
+      setCart([...newCart]);
+      Cookies.set('cartItems', JSON.stringify([...newCart]));
+
+    } else {
+      setCart([...cart.cartItems, newItem]);
+      Cookies.set('cartItems', JSON.stringify([...cart.cartItems, newItem]));
+
+    }
+  };
+
+
+
+  // remove items from the cart 
+  const removeFromCart = (_id) => {
+    const newCart = cart.cartItems.filter(item => {
+      return item._id !== _id;
+    });
+    setCart(newCart);
+    Cookies.set('cartItems', JSON.stringify(newCart));
   }
-  return null; // Handle the case where the cookie is not set
-})(),
+
+  // Clear cart
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
+  // item amount state
+  const [itemAmount, setItemAmount] = useState(0);
+
+  // total price
+  const [total, setTotal] = useState(0);
+  useEffect(() => {
+  const total = cart.cartItems.reduce((accumulator, currentItem) => {
+    return accumulator + currentItem.price * currentItem.amount;
+  }, 0);
+  setTotal(total);
+}, [cart]);
 
 
 
+  // update item amount 
+  useEffect(() => {
+    if (cart) {
+      const amount = cart.cartItems.reduce((accumulator, currentItem) => {
+        return accumulator + currentItem.amount;
+      }, 0);
+      setItemAmount(amount);
+    }
+  }, [cart]);
+
+  // increase amount
+  const increaseAmount = (_id) => {
+    const cartItem = cart.cartItems.find((item) => item._id === _id);
+    addToCart(product, _id);
+    console.log(cartItem);
+  };
+
+  // decrease amount
+  const decreaseAmount = (_id) => {
+    const cartItem = cart.cartItems.find((item) => item._id === _id);
+
+    if (cartItem) {
+      const newCart = cart.cartItems.map(item => {
+        if (item._id === _id) {
+          return { ...item, amount: cartItem.amount - 1 }
+        }
+        else {
+          return item;
+        }
+      });
+      setCart(newCart);
+      Cookies.set('cartItems', JSON.stringify(newCart));
+    }
+    if (cartItem.amount < 2) {
+      removeFromCart(_id);
+    }
+
+    // console.log(item);
+
+  };
+
+  // Set user information
+  const setUserInfoData = (userInfoData) => {
+    setUserInfo(userInfoData);
+    Cookies.set('userInfo', JSON.stringify(userInfoData));
+  };
+
+  // Set shipping address
+ const setShippingAddress = (addressData) => {
+  
+  const updatedCart = { ...cart, shippingAddress: addressData };
+  setCart(updatedCart);
+  Cookies.set('shippingAddress', JSON.stringify(addressData));
+  };
+
+  // Set payment method
+  const setPaymentMethod = (method) => {
+    const updatedCart = { ...cart, paymentMethod: method };
+    setCart(updatedCart);
+    Cookies.set('paymentMethod', method);
+  };
+
+  return (
+    <Store.Provider
+      value={{
+        darkMode,
+        toggleDarkMode,
+        cart,
+        setCart,
+        // setCartItems,
+        removeFromCart,
+        clearCart,
+        userInfo,
+        setUserInfoData,
+        setShippingAddress,
+        setPaymentMethod,
+        increaseAmount,
+        decreaseAmount,
+        total,
+        addToCart,
+        itemAmount
+      }}
+    >
+      {children}
+    </Store.Provider>
+  );
 };
 
-function reducer(state, action) {
-  switch (action.type) {
-    case 'DARK_MODE_ON':
-      return { ...state, darkMode: true };
-    case 'DARK_MODE_OFF':
-      return { ...state, darkMode: false };
-    case 'CART_ADD_ITEM': {
-      const newItem = action.payload;
-      const existItem = state.cart.cartItems.find(
-        (item) => item._key === newItem._key
-      );
-      const cartItems = existItem
-        ? state.cart.cartItems.map((item) =>
-            item._key === existItem._key ? newItem : item
-          )
-        : [...state.cart.cartItems, newItem];
-      Cookies.set('cartItems', JSON.stringify(cartItems));
-      return { ...state, cart: { ...state.cart, cartItems } };
-    }
-    case 'CART_REMOVE_ITEM': {
-      const cartItems = state.cart.cartItems.filter(
-        (item) => item._key !== action.payload._key
-      );
-      Cookies.set('cartItems', JSON.stringify(cartItems));
-      return { ...state, cart: { ...state.cart, cartItems } };
-    }
-    case 'CART_CLEAR':
-      return { ...state, cart: { ...state.cart, cartItems: [] } };
 
-    case 'USER_LOGIN':
-      return { ...state, userInfo: action.payload };
-    case 'USER_LOGOUT':
-      return {
-        ...state,
-        userInfo: null,
-        cart: {
-          cartItems: [],
-          shippingAddress: {},
-        },
-      };
-    case 'SAVE_SHIPPING_ADDRESS':
-      return {
-        ...state,
-        cart: {
-          ...state.cart,
-          shippingAddress: action.payload,
-        },
-      };
-    case 'SAVE_PAYMENT_METHOD':
-      return {
-        ...state,
-        cart: {
-          ...state.cart,
-          paymentMethod: action.payload,
-        },
-      };
-    default:
-      return state;
-  }
-}
-
-export function StoreProvider(props) {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const value = { state, dispatch };
-  return <Store.Provider value={value}>{props.children}</Store.Provider>;
-}

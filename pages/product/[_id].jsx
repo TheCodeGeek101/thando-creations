@@ -6,13 +6,14 @@ import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
 import Image from "next/image";
 import { urlFor } from '../../utils/image';
+import { Store } from '../../contexts/StoreContext';
 
 const ProductDetails = () => {
 	// get the product id from the url
 	const router = useRouter();
 	const _id  =  router.query._id; 
 	const { products } = useContext(ProductContext);
-	const { addToCart } = useContext(CartContext);
+	const { addToCart } = useContext(Store);
 
 	// get the single product 
 	const product = products.find(item => {

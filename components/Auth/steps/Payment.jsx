@@ -6,40 +6,33 @@ import Image from 'next/image';
 import StepsAnimateFramer from '../StepsAnimateFramer';
 
 const Payment = () => {
-    const {state,dispatch} = useContext(Store);
+    const {cart,setPaymentMethod} = useContext(Store);
     const [selectedMethod, setSelectedMethod] = useState('paypal');
     const { enqueueSnackbar } = useSnackbar();
-     const {
-        cart: { shippingAddress },
-     } = state;
-
+  
     useEffect(() => {
-        if (!shippingAddress.address) {
+      console.log("shipping address: " + JSON.stringify(cart.shippingAddress));
+        if (!cart.shippingAddress.address) {
+          enqueueSnackbar('Shipping address is missing', { variant: 'error' });
             console.log("Shipping address is missing");
 
         // router.push('/shipping');
         } else {
         setPaymentMethod(jsCookie.get('paymentMethod') || '');
         }
-    }, [ shippingAddress]);
+    }, [ cart.shippingAddress]);
     
-//     const submitHandler = (e) => {
-//     e.preventDefault();
-
-//     if (!selectedMethod) {
-//       enqueueSnackbar('Payment method is required', { variant: 'error' });
-//     } else {
-//       dispatch({ type: 'SAVE_PAYMENT_METHOD', payload: selectedMethod });
-//       jsCookie.set('paymentMethod', selectedMethod);
-//     }
-//   };
    const handleMethodChange = (event) => {
     if (!selectedMethod) {
       enqueueSnackbar('Payment method is required', { variant: 'error' });
     } else {
-      dispatch({ type: 'SAVE_PAYMENT_METHOD', payload: selectedMethod });
-      jsCookie.set('paymentMethod', selectedMethod);
-      setSelectedMethod(event.target.value);
+      const selectedMethodValue = event.target.value;
+      setSelectedMethod(selectedMethodValue); // Update the selected payment method state
+      setPaymentMethod(selectedMethodValue); // Save the selected payment method to context
+      jsCookie.set('paymentMethod', selectedMethodValue);
+      console.log("Payment method: " + selectedMethodValue);
+      // save the method to context
+      setPaymentMethod(selectedMethodValue);
     }
   };
     const paymentMethods = [
@@ -56,28 +49,66 @@ const Payment = () => {
           Select Payment Method
         </div>
       <div>
-        {paymentMethods.map((method) => (
-          <div key={method.id} className="flex items-center">
+          <div  className="flex items-center">
             <input
               type="radio"
-              id={method.id}
-              value={method.id}
-              checked={selectedMethod === method.id}
+              id='paypal'
+              value='paypal'
+              checked={selectedMethod === 'paypal'}
               onChange={handleMethodChange}
               className="mr-2"
             />
-            <label className='flex mt-5 gap-4 p-4 rounded-xl bg-gray-200 bg-opacity-90 shadow-xl hover:bg-opacity-75 peer-check:bg-purple-900 peer-checked:text-white transition cursor-pointer' htmlFor=
-                
-            {method.id}>
+            <label className='flex mt-5 gap-4 p-4 rounded-xl bg-gray-200 bg-opacity-90 shadow-xl hover:bg-opacity-75 peer-check:bg-purple-900 peer-checked:text-white transition cursor-pointer' htmlFor='paypal'
+             >
                  <Image
-                    src={method.image}
+                    src='/paypal.png'
                     width={50}
                     height={50}
                     alt="Picture of payment method"
                     />
                 </label>
           </div>
-        ))}
+          <div  className="flex items-center">
+            <input
+              type="radio"
+              id='stripe'
+              value='stripe'
+              checked={selectedMethod === 'stripe'}
+              onChange={handleMethodChange}
+              className="mr-2"
+            />
+            <label className='flex mt-5 gap-4 p-4 rounded-xl bg-gray-200 bg-opacity-90 shadow-xl hover:bg-opacity-75 peer-check:bg-purple-900 peer-checked:text-white transition cursor-pointer' htmlFor=
+                
+            'stripe'>
+                 <Image
+                    src='/stripe.png'
+                    width={50}
+                    height={50}
+                    alt="Picture of payment method"
+                    />
+                </label>
+          </div>
+          <div  className="flex items-center">
+            <input
+              type="radio"
+              id='cash'
+              value='cash'
+              checked={selectedMethod === 'cash'}
+              onChange={handleMethodChange}
+              className="mr-2"
+            />
+            <label className='flex mt-5 gap-4 p-4 rounded-xl bg-gray-200 bg-opacity-90 shadow-xl hover:bg-opacity-75 peer-check:bg-purple-900 peer-checked:text-white transition cursor-pointer' htmlFor=
+                
+            'cash'>
+                 <Image
+                    src='/cash.jpg'
+                    width={50}
+                    height={50}
+                    alt="Picture of payment method"
+                    />
+                </label>
+          </div>
+      
       </div>
       {/* <p>You've selected: {selectedMethod}</p> */}
     </div>

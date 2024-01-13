@@ -3,10 +3,10 @@ import ProductProvider from "../contexts/ProductContext";
 import SidebarProvider from "../contexts/SidebarContext";
 import React from "react";
 import '../styles/globals.css';
-import { StoreProvider } from "../contexts/StoreContext";
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { SnackbarProvider } from 'notistack';
 import createCache from '@emotion/cache';
+import {StoreProvider} from "../contexts/StoreContext";
 
 const clientSideEmotionCache = createCache({ key: 'css' });
 

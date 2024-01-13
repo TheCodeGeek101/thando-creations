@@ -3,15 +3,17 @@ import {Store} from "../../contexts/StoreContext";
 import { useRouter } from 'next/router';
 import jsCookie from 'js-cookie';
 import { useSnackbar } from "notistack";
-import { signToken } from "../../utils/Auth";
 import client from "../../utils/client";
 import bcrypt from 'bcryptjs';
+import {signToken} from "../../../utils/Auth";
+import { set } from "react-hook-form";
 
 const Index  = () => {
 
     // define variables
-    const { state, dispatch } = useContext(Store);
-    const { userInfo } = state;
+        
+    const { userInfo, setUserInfoData} = useContext(Store);
+    // const { userInfo } = state;
     const router = useRouter();
     const { redirect } = router.query;
     const [loading, setLoading] = useState(false);
@@ -83,25 +85,16 @@ const Index  = () => {
                 console.log(2 + " Token: " + token);
 
                 enqueueSnackbar("Authentication successful", { variant: 'success' });
-                dispatch({ type: 'USER_LOGIN', payload: data });
+                // dispatch({ type: 'USER_LOGIN', payload: data });
+                setUserInfoData(data);
                 jsCookie.set('userInfo', JSON.stringify(data));
                 router.push(redirect || '/');
                 
-                // const loggedInUser = {
-                // _id: user._id,
-                // name: user.name,
-                // email: user.email,
-                // isAdmin: user.isAdmin,
-                // token,
-                // };
-
-                // return loggedInUser;
-                
             } 
-            else {
-                enqueueSnackbar("Invalid email or password", { variant: 'error' });
-                return; 
-            }
+                else {
+                    enqueueSnackbar("Invalid email or password", { variant: 'error' });
+                    return; 
+                }
         }
         catch(err){
             console.error(err);

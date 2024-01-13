@@ -7,11 +7,10 @@ import { useForm} from 'react-hook-form';
 import { Store } from "../../contexts/StoreContext";
 import bcrypt from 'bcryptjs';
 import client from "../../utils/client";
-import { signToken } from "../../utils/Auth";
+import { signToken } from "../../../utils/Auth";
 
 const Register = () => {
-  const { state, dispatch } = useContext(Store);
-  const { userInfo } = state;
+  const { userInfo, setUserInfoData } = useContext(Store);
   const router = useRouter();
   const { redirect } = router.query;
   const projectId = 'fauat7no';
@@ -159,7 +158,8 @@ const Register = () => {
 
                 const token = signToken(user);
                 res.send({ ...user, token });
-                dispatch({ type: 'USER_LOGIN', payload: response.data });
+                // dispatch({ type: 'USER_LOGIN', payload: response.data });
+                setUserInfoData(data);
                  jsCookie.set('userInfo', JSON.stringify(response.data));
                   // check data
                  console.log(2 + "Data: " +  respsonse);

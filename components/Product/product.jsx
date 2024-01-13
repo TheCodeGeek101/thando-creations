@@ -2,9 +2,10 @@ import React, { useContext } from 'react';
 import Link from "next/link";
 import { BsPlus, BsEyeFill } from "react-icons/bs";
 import { CartContext } from '../../contexts/CartContext';
-import { Img } from 'next/image';
 import { urlFor } from '../../utils/image';
 import Image from 'next/image'
+import { Store } from '../../contexts/StoreContext';
+
 
 const Product = ({ product }) => {
 
@@ -12,14 +13,14 @@ const Product = ({ product }) => {
 
   console.log(1 + "Img url: " + image);
 
-  const cartContext = useContext(CartContext);
+  // const cartContext = 
 
-  if (!cartContext) {
-    // Handle the case where CartContext is undefined, e.g., show an error message or return null.
-    return null;
-  }
+  // if (!cartContext) {
+  //   // Handle the case where CartContext is undefined, e.g., show an error message or return null.
+  //   return null;
+  // }
 
-  const { addToCart } = cartContext;
+  const { addToCart } = useContext(Store);
 
   return (
     <div>

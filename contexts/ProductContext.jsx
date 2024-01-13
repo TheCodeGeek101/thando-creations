@@ -15,6 +15,8 @@ const client = createClient({
 });
 
   useEffect(() => {
+    
+    // fetch products from sanity studio
     const fetchProducts = () => {
       try {
         client.fetch(`*[_type == "product"]{

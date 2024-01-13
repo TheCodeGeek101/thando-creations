@@ -9,9 +9,10 @@ import { Store } from '../contexts/StoreContext';
 
 const Sidebar = () => {
   const { isOpen, handleClose } = useContext(SidebarContext);
-  const { cart, clearCart, total, itemAmount } = useContext(CartContext);
-  const {state, dispatch} = useContext(Store);
-  const {userInfo} = state;
+  const { cart, clearCart, total, itemAmount,userInfo } = useContext(Store);
+  // const {state, dispatch} = useContext(Store);
+  // const {userInfo} = state;
+
   return ( 
     <div className={`${isOpen ? 'right-0' : '-right-full'} w-full bg-white fixed top-0 h-full shadow-2xl md:w-[35vw] xl:max-w-[30vw] transition-all duration-300 z-20 px-4 lg:px-[35px]`}>
       <div className='flex items-center justify-between py-6 border-b'>
@@ -22,7 +23,7 @@ const Sidebar = () => {
         </div>
       </div>
       <div className='flex flex-col gap-y-2 h-[220px] lg:h-[340px] overflow-y-auto overflow-x-hidden border-b'>
-        {cart.map((item) => {
+        {cart.cartItems.map((item) => {
           return (
             <CartItem item={item} key={item._id} />
           );

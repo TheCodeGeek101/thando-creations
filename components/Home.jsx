@@ -31,8 +31,7 @@ const Home = () => {
             {products.map(product => {
               // console.log(3 + "individual products are:" + product);
               return <Product product={product} key={product._id} />
-            }
-            )}
+            })}
           </div>
         </div>
       </section>

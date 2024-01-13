@@ -19,7 +19,7 @@
     "js-cookie": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
     "next": "14.0.0",
-    "next-connect": "^1.0.0",
+    "next-connect": "^0.12.1",
     "next-sanity": "^5.5.10",
     "next-sanity-image": "^6.1.0",
     "notistack": "^3.0.1",
